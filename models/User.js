@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-require("./Thoughts")
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, trim: true },
   email: {
@@ -12,10 +12,12 @@ const userSchema = new mongoose.Schema({
       "Please fill a valid email address",
     ],
   },
-  thoughts: [{
-    type: Schema.Types.ObjectId,
-    ref:"thoughts"
-}],
+  thoughts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "thoughts",
+    },
+  ],
   friends: [
     {
       type: Schema.Types.ObjectId,
