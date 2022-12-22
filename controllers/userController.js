@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongoose').Types;
 const {User, Thoughts} = require('../models');
 
 module.exports = {
@@ -25,13 +24,39 @@ module.exports = {
     },
     //delete a user
     deleteUser(req, res) {
-        User.findOneAndRemove({_id: req.params.userId})
-        .then((user) =>
+      User.findOneAndRemove({ _id: req.params.userId })
+      .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with that ID' })
-          : Thoughts.deleteMany({ _id: { $in: user.applications } })
+          ? res.status(404).json({ message: 'No such user exists' })
+          : Thoughts.findOneAndUpdate(
+              { users: req.params.userId },
+              { $pull: { users: req.params.userId } },
+              { new: true }
+            )
       )
-      .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
-      .catch((err) => res.status(500).json(err));
+      .then((thoughts) =>
+        !thoughts
+          ? res.status(404).json({
+              message: 'user deleted, but no thoughts found',
+            })
+          : res.json({ message: 'user successfully deleted' })
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+    },
+    updateUser(req, res) {
+        console.log(req.body);
+        User.findOneAndUpdate(
+            {_id: req.params.userId}, 
+            {$set: req.body},
+            { runValidators: true, new: true }
+    )
+    .then((user) => {
+        !user
+        ? res.status(404).json({message: 'No user with this id.'})
+        : res.json(user)
+    }).catch((err) => res.status(500).json(err));
     },
   };
