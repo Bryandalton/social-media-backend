@@ -1,14 +1,11 @@
 {
-  "name": "28-Stu_Mini-Project",
+  "name": "Social-Media-Backend",
   "version": "1.0.1",
-  "description": "Mongoose back-end project - Main",
+  "description": "Social-Media-Backend - Main",
   "main": "index.js",
-  "license": "MIT",
+  "license": "",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
-    "seed": "node utils/seed",
-    "heroku-postbuild": "node utils/seed.js"
+    "start": "node index"
   },
   "dependencies": {
     "express": "^4.17.1",

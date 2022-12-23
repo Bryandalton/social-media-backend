@@ -1,8 +1,14 @@
 const { User, Thoughts } = require("../models");
+const { ObjectId } = require("mongoose").Types;
 
 module.exports = {
   getUsers(req, res) {
-    User.find()
+    User.find({})
+      .populate({
+        path: "thoughts",
+        select: "-__v",
+      })
+      .select("-__v")
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
@@ -80,7 +86,7 @@ module.exports = {
   removeFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $pull: { friend: { friendId: req.params.friendId } } },
+      { $pull: { friends: { friendId: req.params.friendId } } },
       { runValidators: true, new: true }
     )
       .then((user) =>
